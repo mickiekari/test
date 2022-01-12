@@ -1,0 +1,21 @@
+<form [formGroup]="formGroup" (ngSubmit)="submit()">
+  <input type="text" formControlName="ip">
+
+  <div *ngIf="ipFormControl.invalid && (ipFormControl.touched || ipFormControl.dirty)">
+    <span class="text-error" *ngIf="ipFormControl.errors?.['required']">
+      Field is required
+    </span>
+  </div>
+</form>
+
+<button type="submit" (click)="submit()">Submit</button>
+
+<div *ngIf="personInfo">
+  <span>region: {{ personInfo.region }}</span>
+  <br>
+  <span>city: {{ personInfo.city }}</span>
+  <br>
+  <span>timezone: {{ personInfo.timezone }}</span>
+  <br>
+  <span>distance to zero km: {{ personInfo.distanceToZeroKm }}</span>
+</div>
