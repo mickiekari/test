@@ -3,13 +3,16 @@ import {HttpClient} from '@angular/common/http';
 import {Observable} from 'rxjs';
 import {catchError, map} from 'rxjs/operators';
 import {MathService} from '../service/math.service';
-import {PersonInfo} from '../model/person-info.model';
+import {PersonInfoJson, PersonInfo} from '../model/person-info.model';
 
 
 @Injectable({
   providedIn: 'root',
 })
 export class IpApiService {
+  httpParams: object = {
+    responseType: 'json'
+  }
 
   private errorMessage: string = '';
 
@@ -25,10 +28,10 @@ export class IpApiService {
   public getPersonInfo(ip: string): Observable<PersonInfo> {
     const url = this.getUrl(ip);
 
-    return this.http.get<any>(url)
+    return this.http.get<PersonInfoJson>(url, this.httpParams)
       .pipe(
         map((data) => {
-          return this.personInfo(data, data.latitude, data.longitude);
+          return this.personInfo(data);
         }),
         catchError((err) => {
           console.log(err);
@@ -38,12 +41,14 @@ export class IpApiService {
       );
   }
 
-  private personInfo(data: any, latitude: number, longitude: number): PersonInfo {
+  private personInfo(data: PersonInfoJson): PersonInfo {
     return {
       region: data.region,
       city: data.city,
       timezone: data.timezone,
-      distanceToZeroKm: this.mathService.calcDistanceToZeroKm(latitude, longitude)
+      latitude: data.latitude,
+      longitude: data.longitude,
+      distanceToZeroKm: this.mathService.calcDistanceToZeroKm(data.latitude, data.longitude)
     }
   }
 

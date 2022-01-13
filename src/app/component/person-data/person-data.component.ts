@@ -22,6 +22,7 @@ export class PersonDataComponent implements OnInit {
   }
 
   ngOnInit(): void {
+
   }
 
   submit() {
